@@ -6,13 +6,25 @@ const Newsapp = () => {
   const [newsData, setNewsData] = useState([]);
   const API_KEY =import.meta.env.VITE_NEWS_API_KEY;
 
-  const getData = async () => {
+ const getData = async () => {
+  try {
     const response = await fetch(
       `https://newsapi.org/v2/everything?q=${search}&apiKey=${API_KEY}`
     );
+
     const jsonData = await response.json();
-    setNewsData(jsonData.articles);
-  };
+
+    if (jsonData.articles) {
+      setNewsData(jsonData.articles);
+    } else {
+      setNewsData([]);
+    }
+  } catch (error) {
+    console.error("API Error:", error);
+    setNewsData([]);
+  }
+};
+
 
   useEffect(() => {
     getData();
